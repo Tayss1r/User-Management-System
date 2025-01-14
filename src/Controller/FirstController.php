@@ -13,4 +13,17 @@ class FirstController extends AbstractController
     {
         return $this->render('first/index.html.twig',  ['name' => 'ferhi','firstname' => 'tayssir']);
     }
+
+    #[Route("/multi/{a}/{b}","app_multi")]
+    public function multiplication($a, $b) {
+        $result = $a * $b;
+        return new Response("<h1>$result</h1>");
+    }
 }
+
+/*
+    #[Route("/multi/{a}/{b}","app_multi", requirements: ['a' => '\d+'], 'b' => '\d+'])]
+    #[Route("/multi/{a<\d+>}/{b<\d+>}","app_multi")]
+        -> the values of a and b must be an integer
+
+ */

@@ -8,9 +8,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+#[Route('/todo')] // prefix for all controllers(methods) instead of writing each time /todo/add , /todo/update etc...
 class TodoController extends AbstractController
 {
-    #[Route('/todo', name: 'todo')]
+    #[Route('/', name: 'todo')]
     public function index(Request $request): Response
     {
         $session = $request->getSession();
@@ -25,7 +26,7 @@ class TodoController extends AbstractController
         }
         return $this->render('todo/index.html.twig');
     }
-    #[Route('/todo/add/{name}/{contenu}','add.todo')]
+    #[Route('/add/{name}/{contenu}','add.todo')]
     public function addTodo(Request $request, $name, $contenu): RedirectResponse {
         $session = $request->getSession();
         if($session->has('todos')) {
@@ -42,7 +43,7 @@ class TodoController extends AbstractController
         }
         return $this->redirectToRoute('todo');
     }
-    #[Route('/todo/update/{name}/{contenu}','update.todo')]
+    #[Route('/update/{name}/{contenu}','update.todo')]
     public function updateTodo(Request $request, $name, $contenu): RedirectResponse {
         $session = $request->getSession();
         if($session->has('todos')) {
@@ -59,7 +60,7 @@ class TodoController extends AbstractController
         }
         return $this->redirectToRoute('todo');
     }
-    #[Route('/todo/delete/{name}','delete.todo')]
+    #[Route('/delete/{name}','delete.todo')]
     public function deleteTodo(Request $request, $name): RedirectResponse {
         $session = $request->getSession();
         if($session->has('todos')) {
@@ -76,7 +77,7 @@ class TodoController extends AbstractController
         }
         return $this->redirectToRoute('todo');
     }
-    #[Route('/todo/reset','reset.todo')]
+    #[Route('/reset','reset.todo')]
     public function resetTodo(Request $request): RedirectResponse {
         $session = $request->getSession();
         $session->remove('todos');
@@ -84,3 +85,12 @@ class TodoController extends AbstractController
     }
 
 }
+
+
+/*
+    #[Route('/add/{name}/{contenu}','add.todo', defaults: ['content' => 'test'])]
+    #[Route('/add/{name}/{contenu?test}','add.todo')]
+        -> default value if the contenu parameter is not provided in the URL
+        -> you cannot assign a default value to name alone
+           unless all parameters to its right also have default values.
+*/
