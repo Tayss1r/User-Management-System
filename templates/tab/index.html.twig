@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{{ asset('node_modules/bootstrap/dist/css/bootstrap.css') }}">
+    <title>Document</title>
+</head>
+<body>
+    {#
+        <h1>{{ firstname | capitalize }} {{ lastname | capitalize }}</h1>
+        <table class="table">
+            {% for s in score %}
+                <tr>
+                    <td> {{ s }} </td>
+                </tr>
+            {% endfor %}
+        </table>
+        <div class="alert alert-info">
+            <p>table length : {{ score | length }}</p>
+            <p>min score : {{ min(score) }}, max score : {{ max(score) }}</p>
+        </div>
+    #}
+
+    <h1>Employees List : </h1>
+    <table class="table">
+        <tr class="table-active">
+            <td>firstname</td>
+            <td>lastname</td>
+            <td>age</td>
+        </tr>
+        {% for p in people %}
+            <tr class ="{% if p.age is odd %} table-danger {% else %} table-success {% endif %}">
+                <td>{{ p.firstname }}</td>
+                <td>{{ p.lastname }}</td>
+                <td>{{ p.age }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+</body>
+</html>

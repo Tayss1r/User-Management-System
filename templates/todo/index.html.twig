@@ -1,34 +1,16 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="{{ asset('node_modules/bootstrap/dist/css/bootstrap.css') }}">
-    <title>Document</title>
-</head>
-<body>
-{% for message in app.flashes('info') %}
-    <div class="alert alert-info">
-        {{ message }}
-    </div>
-{% endfor %}
-{% for message in app.flashes('error') %}
-    <div class="alert alert-danger">
-        {{ message }}
-    </div>
-{% endfor %}
-{% for message in app.flashes('success') %}
-    <div class="alert alert-success">
-        {{ message }}
-    </div>
-{% endfor %}
-<h1>Liste des todos : </h1>
+{% extends 'Template.html.twig' %}
+{% block title %}
+    Todo
+{% endblock %}
+
+{% block body %}
+
+{% block pageTitle %}
+    <h1>To-do</h1>
+{% endblock%}
 <ul class="list-group">
     {% for cle,element in app.session.get('todos') %}
         <li class="list-group-item">{{ cle }} : {{ element }}</li>
     {% endfor %}
 </ul>
-</body>
-</html>
+{% endblock %}

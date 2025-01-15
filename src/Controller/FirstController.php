@@ -11,7 +11,12 @@ class FirstController extends AbstractController
     #[Route('/first', name: 'app_first')]
     public function index(): Response
     {
-        return $this->render('first/index.html.twig',  ['name' => 'ferhi','firstname' => 'tayssir']);
+        return $this->render('first/index.html.twig',  ['lastname' => 'ferhi','firstname' => 'tayssir']);
+    }
+    #[Route('/template', name: 'app_template')]
+    public function template(): Response
+    {
+        return $this->render('Template.html.twig');
     }
 
     #[Route("/multi/{a}/{b}","app_multi")]
@@ -19,6 +24,7 @@ class FirstController extends AbstractController
         $result = $a * $b;
         return new Response("<h1>$result</h1>");
     }
+
 }
 
 /*
