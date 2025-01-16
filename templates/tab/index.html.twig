@@ -1,41 +1,17 @@
 {% extends 'Template.html.twig' %}
-    {#
-        <h1>{{ firstname | capitalize }} {{ lastname | capitalize }}</h1>
-        <table class="table">
-            {% for s in score %}
-                <tr>
-                    <td> {{ s }} </td>
-                </tr>
-            {% endfor %}
-        </table>
-        <div class="alert alert-info">
-            <p>table length : {{ score | length }}</p>
-            <p>min score : {{ min(score) }}, max score : {{ max(score) }}</p>
-        </div>
-    #}
-{% block title %} Employees {% endblock %}
-
-{% block pageTitle %}
-    <h1>Employees List : </h1>
-{% endblock %}
 
 
 {% block body %}
-    {{ include('fragments/fragment.html.twig') }}
+    <h1>{{ firstname | capitalize }} {{ lastname | capitalize }}</h1>
     <table class="table">
-        <tr class="table-active">
-            <td>firstname</td>
-            <td>lastname</td>
-            <td>age</td>
-            <td>message</td>
-        </tr>
-        {% for p in people %}
-            <tr class ="{% if p.age is odd %} table-danger {% else %} table-success {% endif %}">
-                <td>{{ p.firstname }}</td>
-                <td>{{ p.lastname }}</td>
-                <td>{{ p.age }}</td>
-                <td>{{ render(controller('App\\Controller\\FirstController::sayHello', {firstname : p.firstname, lastname : p.lastname})) }}</td>
+        {% for s in score %}
+            <tr>
+                <td> {{ s }} </td>
             </tr>
         {% endfor %}
     </table>
+    <div class="alert alert-info">
+        <p>table length : {{ score | length }}</p>
+        <p>min score : {{ min(score) }}, max score : {{ max(score) }}</p>
+    </div>
 {% endblock %}

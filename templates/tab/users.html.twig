@@ -1,0 +1,30 @@
+{% extends 'Template.html.twig' %}
+{% block title %} Employees {% endblock %}
+
+{% block pageTitle %}
+    <h1>Employees List : </h1>
+{% endblock %}
+
+
+{% block body %}
+    {{ include('fragments/fragment.html.twig') }}
+    <div class="alert alert-warning">
+        <a href="{{ path('app_tab', {nb:7}) }}">tabController</a>
+    </div>
+    <table class="table">
+        <tr class="table-active">
+            <td>firstname</td>
+            <td>lastname</td>
+            <td>age</td>
+            <td>message</td>
+        </tr>
+        {% for p in people %}
+            <tr class ="{% if p.age is odd %} table-danger {% else %} table-success {% endif %}">
+                <td>{{ p.firstname }}</td>
+                <td>{{ p.lastname }}</td>
+                <td>{{ p.age }}</td>
+                <td>{{ render(controller('App\\Controller\\FirstController::sayHello', {firstname : p.firstname, lastname : p.lastname})) }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

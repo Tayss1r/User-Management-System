@@ -37,6 +37,6 @@ class TabController extends AbstractController
                 "age" => 28
             ]
         ];
-        return $this->render('tab/index.html.twig',  ['people' => $people]);
+        return $this->render('tab/users.html.twig',  ['people' => $people]);
     }
 }
