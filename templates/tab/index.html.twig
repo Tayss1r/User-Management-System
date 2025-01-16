@@ -1,14 +1,4 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="{{ asset('node_modules/bootstrap/dist/css/bootstrap.css') }}">
-    <title>Document</title>
-</head>
-<body>
+{% extends 'Template.html.twig' %}
     {#
         <h1>{{ firstname | capitalize }} {{ lastname | capitalize }}</h1>
         <table class="table">
@@ -23,22 +13,29 @@
             <p>min score : {{ min(score) }}, max score : {{ max(score) }}</p>
         </div>
     #}
+{% block title %} Employees {% endblock %}
 
+{% block pageTitle %}
     <h1>Employees List : </h1>
+{% endblock %}
+
+
+{% block body %}
+    {{ include('fragments/fragment.html.twig') }}
     <table class="table">
         <tr class="table-active">
             <td>firstname</td>
             <td>lastname</td>
             <td>age</td>
+            <td>message</td>
         </tr>
         {% for p in people %}
             <tr class ="{% if p.age is odd %} table-danger {% else %} table-success {% endif %}">
                 <td>{{ p.firstname }}</td>
                 <td>{{ p.lastname }}</td>
                 <td>{{ p.age }}</td>
+                <td>{{ render(controller('App\\Controller\\FirstController::sayHello', {firstname : p.firstname, lastname : p.lastname})) }}</td>
             </tr>
         {% endfor %}
     </table>
-
-</body>
-</html>
+{% endblock %}

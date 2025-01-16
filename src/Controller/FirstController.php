@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -23,6 +24,10 @@ class FirstController extends AbstractController
     public function multiplication($a, $b) {
         $result = $a * $b;
         return new Response("<h1>$result</h1>");
+    }
+
+    public function sayHello(Request $request, $firstname, $lastname) {
+        return $this->render('first/hello.html.twig',  ['lastname' => $lastname,'firstname' => $firstname]);
     }
 
 }
