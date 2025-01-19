@@ -10,14 +10,21 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class PersonController extends AbstractController
 {
-    #[Route('/person', name: 'app_person')]
+    #[Route('/person/add', name: 'app_person')]
     public function AddPerson(ManagerRegistry $doctrine) {
+
         $entityManger = $doctrine->getManager();
+
         $person = new Person();
-        $person->setFirstName('tayssir');
+        $person->setFirstName('Tayssir');
+        $person->setLastname('Ferhi');
+        $person->setAge(20);
+
         $entityManger->persist($person);
-        return $this->render('person/index.html.twig', [
-            'controller_name' => 'PersonController',
+
+        $entityManger->flush();
+        return $this->render('person/detail.html.twig', [
+            'person' => $person,
         ]);
     }
 }
