@@ -1,20 +1,19 @@
-{% extends 'base.html.twig' %}
+{% extends 'Template.html.twig' %}
 
-{% block title %}Hello PersonController!{% endblock %}
+{% block title %}List of People : {% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/S2/symfonyProjects/firstProject/src/Controller/PersonController.php</code></li>
-        <li>Your template at <code>C:/S2/symfonyProjects/firstProject/templates/person/index.html.twig</code></li>
-    </ul>
-</div>
+    <div class="row g-1">
+        {% for person in persons %}
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">{{ person.firstname }}</h5>
+                    <h6 class="card-subtitle mb-2 text-body-secondary">{{ person.lastname }}</h6>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <a href="#" class="card-link">Card link</a>
+                    <a href="#" class="card-link">Another link</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

@@ -8,9 +8,18 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+#[Route('/person')]
 class PersonController extends AbstractController
 {
-    #[Route('/person/add', name: 'app_person')]
+    #[Route('/', name: 'findAll.person')]
+    public function index(ManagerRegistry $doctrine): Response {
+        $repository = $doctrine->getRepository(Person::class);
+        $persons = $repository->findAll();
+        return $this->render('person/index.html.twig', ['persons' => $persons]);
+    }
+
+
+    #[Route('/add', name: 'app_person')]
     public function AddPerson(ManagerRegistry $doctrine) {
 
         $entityManger = $doctrine->getManager();
