@@ -21,8 +21,15 @@ class PersonController extends AbstractController
     #[Route('/all/{page?1}/{num?12}', name: 'all.person')]
     public function indexAll(ManagerRegistry $doctrine, $page, $num): Response {
         $repository = $doctrine->getRepository(Person::class);
+        $numPers = $repository->count([]);
+        $numPage = ceil($numPers / $num);
         $persons = $repository->findBy([], [], $num, ($page-1) * $num);
-        return $this->render('person/index.html.twig', ['persons' => $persons]);
+        return $this->render('person/index.html.twig', [
+            'persons' => $persons,
+            'numPage' => $numPage,
+            'page' => $page,
+            'num' => $num
+        ]);
     }
 
 
