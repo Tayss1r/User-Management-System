@@ -11,6 +11,21 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/person')]
 class PersonController extends AbstractController
 {
+    #[Route('/', name: 'findAll.person')]
+    public function index(ManagerRegistry $doctrine): Response {
+        $repository = $doctrine->getRepository(Person::class);
+        $persons = $repository->findAll();
+        return $this->render('person/index.html.twig', ['persons' => $persons]);
+    }
+
+    #[Route('/all/{page?1}/{num?12}', name: 'all.person')]
+    public function indexAll(ManagerRegistry $doctrine, $page, $num): Response {
+        $repository = $doctrine->getRepository(Person::class);
+        $persons = $repository->findBy([], [], $num, ($page-1) * $num);
+        return $this->render('person/index.html.twig', ['persons' => $persons]);
+    }
+
+
     #[Route('/add', name: 'app_person')]
     public function AddPerson(ManagerRegistry $doctrine) {
 
@@ -29,12 +44,7 @@ class PersonController extends AbstractController
         ]);
     }
 
-    #[Route('/', name: 'findAll.person')]
-    public function index(ManagerRegistry $doctrine): Response {
-        $repository = $doctrine->getRepository(Person::class);
-        $persons = $repository->findAll();
-        return $this->render('person/index.html.twig', ['persons' => $persons]);
-    }
+
 
     #[Route('/{id<\d+>}', name: 'detail.person')]
     public function detail(Person $person = null): Response {
