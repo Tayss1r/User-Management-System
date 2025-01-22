@@ -16,6 +16,7 @@
             </div>
         {% endfor %}
     </div>
+    {% if isPaginated is defined and isPaginated %}
     <div class="row" style="margin-top: 5px">
         <nav aria-label="Page navigation example">
             <ul class="col pagination">
@@ -39,4 +40,5 @@
             </ul>
         </nav>
     </div>
+    {% endif %}
 {% endblock %}
