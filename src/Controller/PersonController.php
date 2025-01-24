@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Person;
+use App\Form\PersonType;
 use Doctrine\Persistence\ManagerRegistry;
 use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -60,17 +61,13 @@ class PersonController extends AbstractController
     public function AddPerson(ManagerRegistry $doctrine): Response {
 
         $entityManger = $doctrine->getManager();
-
         $person = new Person();
-        $person->setFirstName('Tayssir');
-        $person->setLastname('Ferhi');
-        $person->setAge(20);
+        $form = $this->createForm(PersonType::class, $person);
+        $form->remove('createdAt');
+        $form->remove('updatedAt');
 
-        $entityManger->persist($person);
-
-        $entityManger->flush();
-        return $this->render('person/detail.html.twig', [
-            'person' => $person,
+        return $this->render('person/addPerson.html.twig', [
+            'form' => $form->createView(),
         ]);
     }
 
