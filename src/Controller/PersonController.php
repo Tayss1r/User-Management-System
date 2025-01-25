@@ -8,6 +8,8 @@ use Doctrine\Persistence\ManagerRegistry;
 use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -58,13 +60,23 @@ class PersonController extends AbstractController
 
     // add a person to the list
     #[Route('/add', name: 'app_person')]
-    public function AddPerson(ManagerRegistry $doctrine): Response {
+    public function AddPerson(ManagerRegistry $doctrine, Request $request): Response {
 
-        $entityManger = $doctrine->getManager();
+
         $person = new Person();
         $form = $this->createForm(PersonType::class, $person);
         $form->remove('createdAt');
         $form->remove('updatedAt');
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted()) {
+            $manager = $doctrine->getManager();
+            $manager->persist($person);
+            $manager->flush();
+            $this->addFlash('success', "the person as been added sucessfully");
+            $this->redirectToRoute('all.person');
+        }
 
         return $this->render('person/addPerson.html.twig', [
             'form' => $form->createView(),

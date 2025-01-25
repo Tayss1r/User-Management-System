@@ -41,8 +41,6 @@ class Person
     #[ORM\ManyToOne(inversedBy: 'people')]
     private ?Job $job = null;
 
-
-
     public function __construct()
     {
         $this->hobbies = new ArrayCollection();
