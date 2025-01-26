@@ -58,9 +58,9 @@ class PersonController extends AbstractController
         ]);
     }
 
-    // add a person to the list
+    // add a person using forms
     #[Route('/add', name: 'app_person')]
-    public function AddPerson(ManagerRegistry $doctrine, Request $request): Response {
+    public function addPerson(ManagerRegistry $doctrine, Request $request): Response {
 
 
         $person = new Person();
@@ -75,7 +75,34 @@ class PersonController extends AbstractController
             $manager->persist($person);
             $manager->flush();
             $this->addFlash('success', "the person as been added sucessfully");
-            $this->redirectToRoute('all.person');
+            return $this->redirectToRoute('all.person');
+        }
+
+        return $this->render('person/addPerson.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    // edit a person using forms
+    #[Route('/edit{id?0}', name: 'edit.person')]
+    public function editPerson(Person $person = null, ManagerRegistry $doctrine, Request $request): Response {
+
+        if (!$person) {
+            $person = new Person();
+        }
+
+        $form = $this->createForm(PersonType::class, $person);
+        $form->remove('createdAt');
+        $form->remove('updatedAt');
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted()) {
+            $manager = $doctrine->getManager();
+            $manager->persist($person);
+            $manager->flush();
+            $this->addFlash('success', "the person as been edited sucessfully");
+            return $this->redirectToRoute('all.person');
         }
 
         return $this->render('person/addPerson.html.twig', [
