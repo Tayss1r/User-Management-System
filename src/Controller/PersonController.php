@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Person;
 use App\Form\PersonType;
+use App\service\UploaderService;
 use Doctrine\Persistence\ManagerRegistry;
 use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -87,7 +88,7 @@ class PersonController extends AbstractController
 
     // edit a person using forms
     #[Route('/edit{id?0}', name: 'edit.person')]
-    public function editPerson(Person $person = null, ManagerRegistry $doctrine, Request $request, SluggerInterface $slugger): Response {
+    public function editPerson(Person $person = null, ManagerRegistry $doctrine, Request $request, UploaderService $uploaderService): Response {
 
         if (!$person) {
             $person = new Person();
@@ -99,29 +100,16 @@ class PersonController extends AbstractController
 
         $form->handleRequest($request);
 
-        if($form->isSubmitted()) {
+        if($form->isSubmitted() && $form->isValid()) {
             $brochureFile = $form->get('photo')->getData();
 
             // this condition is needed because the 'brochure' field is not required
             // so the PDF file must be processed only when a file is uploaded
             if ($brochureFile) {
-                $originalFilename = pathinfo($brochureFile->getClientOriginalName(), PATHINFO_FILENAME);
-                // this is needed to safely include the file name as part of the URL
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$brochureFile->guessExtension();
-
-                // Move the file to the directory where brochures are stored
-                try {
-                    $brochureFile->move(
-                        $this->getParameter('imagedirectory')
-                        , $newFilename);
-                } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
-                }
-
                 // updates the 'brochureFilename' property to store the PDF file name
                 // instead of its contents
-                $person->setImage($newFilename);
+                $directory = $this->getParameter('imageDirectory');
+                $person->setImage($uploaderService->uploadFile($brochureFile, $directory));
             }
 
             $manager = $doctrine->getManager();

@@ -31,7 +31,13 @@ class PersonType extends AbstractType
             ])
             ->add('profile', EntityType::class, [
                 'class' => Profile::class,
+                'expanded' => false,
+                'required' => false,
+                'multiple' => false,
                 'choice_label' => 'rs',
+                'attr' => [
+                    'class' => 'select2'
+                ]
             ])
             ->add('hobbies', EntityType::class, [
                 'expanded' => false,
@@ -43,10 +49,17 @@ class PersonType extends AbstractType
                         ->orderBy('h.designation', 'ASC');
                 },
                 'choice_label' => 'designation',
+                'attr' => [
+                    'class' => 'select2'
+                ]
             ])
             ->add('job', EntityType::class, [
                 'class' => Job::class,
                 'choice_label' => 'designation',
+                'required' => false,
+                'attr' => [
+                    'class' => 'select2'
+                ]
             ])
 
             ->add('photo', FileType::class, [
