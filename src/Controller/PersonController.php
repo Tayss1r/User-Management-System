@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Person;
 use App\Form\PersonType;
+use App\service\PDFService;
 use App\service\UploaderService;
 use Doctrine\Persistence\ManagerRegistry;
 use Psr\Container\ContainerInterface;
@@ -25,6 +26,12 @@ class PersonController extends AbstractController
         $repository = $doctrine->getRepository(Person::class);
         $persons = $repository->findAll();
         return $this->render('person/index.html.twig', ['persons' => $persons]);
+    }
+
+    #[Route('/pdf/{id}', 'pdf.person')]
+    public function PDF(Person $person = null ,PDFService $pdf) {
+        $html = $this->render('person/detail.html.twig', ['person' => $person]);
+        $pdf->showPDFFile($html);
     }
 
     #[Route('/age/{min}/{max}', name: 'ageInterval.person')]
