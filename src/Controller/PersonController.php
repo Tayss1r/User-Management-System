@@ -97,9 +97,12 @@ class PersonController extends AbstractController
     #[Route('/edit{id?0}', name: 'edit.person')]
     public function editPerson(Person $person = null, ManagerRegistry $doctrine, Request $request, UploaderService $uploaderService): Response {
 
+        $new = false;
         if (!$person) {
             $person = new Person();
+            $new = true;
         }
+
 
         $form = $this->createForm(PersonType::class, $person);
         $form->remove('createdAt');
@@ -119,10 +122,17 @@ class PersonController extends AbstractController
                 $person->setImage($uploaderService->uploadFile($brochureFile, $directory));
             }
 
+            if($new) {
+                $message = " has been added sucessfully ";
+                $person->setCreatedBy($this->getUser());
+            } else {
+                $message = " has been edited sucessfully ";
+            }
+
             $manager = $doctrine->getManager();
             $manager->persist($person);
             $manager->flush();
-            $this->addFlash('success', "the person as been edited sucessfully");
+            $this->addFlash('success',$person->getName(). $message );
             return $this->redirectToRoute('all.person');
         }
 

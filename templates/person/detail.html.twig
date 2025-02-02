@@ -3,5 +3,10 @@
 {% block body %}
     <div class="alert alert-success">
         {{ person.firstname }} {{ person.lastname }} is {{ person.age }} years old.
+        {% if app.user %}
+            <p>
+                this person is created by {{ app.user.email }}
+            </p>
+        {% endif %}
     </div>
 {% endblock %}
