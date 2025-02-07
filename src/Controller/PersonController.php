@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Person;
+use App\events\AddPersonEvent;
 use App\Form\PersonType;
 use App\service\Helpers;
 use App\service\PDFService;
@@ -18,6 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 #[
     Route('/person'),
@@ -28,6 +30,7 @@ class PersonController extends AbstractController
     public function __construct(
         private LoggerInterface $logger,
         private Helpers $helper,
+        private EventDispatcherInterface $dispatcher
     )
     {}
 
@@ -143,6 +146,12 @@ class PersonController extends AbstractController
             $manager = $doctrine->getManager();
             $manager->persist($person);
             $manager->flush();
+
+            if($new) {
+                $addPersonEvent = new AddPersonEvent($person);
+                $this->dispatcher->dispatch($addPersonEvent, AddPersonEvent::ADD_PERSON_EVENT);
+            }
+
             $this->addFlash('success',$person->getName(). $message );
             return $this->redirectToRoute('all.person');
         }
