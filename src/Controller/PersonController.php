@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Person;
 use App\Form\PersonType;
+use App\service\Helpers;
 use App\service\PDFService;
 use App\service\UploaderService;
 use Doctrine\Persistence\ManagerRegistry;
@@ -15,11 +16,21 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
-#[Route('/person')]
+#[
+    Route('/person'),
+    isGranted('ROLE_USER')
+]
 class PersonController extends AbstractController
 {
+    public function __construct(
+        private LoggerInterface $logger,
+        private Helpers $helper,
+    )
+    {}
+
     // list
     #[Route('/', name: 'findAll.person')]
     public function index(ManagerRegistry $doctrine): Response {
@@ -96,7 +107,7 @@ class PersonController extends AbstractController
     // edit a person using forms
     #[Route('/edit{id?0}', name: 'edit.person')]
     public function editPerson(Person $person = null, ManagerRegistry $doctrine, Request $request, UploaderService $uploaderService): Response {
-
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $new = false;
         if (!$person) {
             $person = new Person();
@@ -153,7 +164,9 @@ class PersonController extends AbstractController
     }
 
     // delete someone
-    #[Route('/delete/{id}', 'delete.person')]
+    #[Route('/delete/{id}', 'delete.person'),
+        isGranted('ROLE_ADMIN')
+    ]
     public function delete(Person $person = null, ManagerRegistry $doctrine): RedirectResponse{
         if($person) {
             $manager = $doctrine->getManager();
